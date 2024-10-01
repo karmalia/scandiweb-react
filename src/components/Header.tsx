@@ -1,66 +1,103 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import graphql from "../http/http";
-import Queries from "../queries/queries.class";
-import getCategories from "../graphql/get-categories";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { Category } from "../types";
-import { Axios, AxiosError } from "axios";
+import Icons from "./Icons";
+import { ContextState, GlobalContext } from "../context/global-context";
+import { AxiosError } from "axios";
+import getFirstPathSegment from "../utils/get-first-path-segment";
+import Cart from "./Cart";
 
-const Query = new Queries();
-
-type Props = {};
+type Props = RouteComponentProps<{ category: string }>;
 
 type State = {
   links: Category[];
   error: null | AxiosError;
   isLoading: boolean;
+  category: string; // Change to non-nullable `string`
 };
 
-export default class Header extends Component<Props, State> {
-  state = {
+class Header extends Component<Props, State> {
+  state: State = {
     links: [],
     error: null,
     isLoading: true,
-  };
-
-  public setLinks = (links: Category[]) => {
-    if (Array.isArray(links)) {
-      // Ensure `links` is a valid array before updating state
-      this.setState({ links, isLoading: false });
-    } else {
-      this.setState({
-        error: new Error("Invalid data format") as AxiosError,
-        isLoading: false,
-      });
-    }
+    category: "all", // Set initial category to "all" instead of null
   };
 
   componentDidMount() {
-    getCategories(this.setLinks).catch((error: AxiosError) => {
-      this.setState({ error, isLoading: false });
-    });
+    const pathname = this.props.location.pathname;
+
+    // Set category state to the initial route parameter or default to "all"
+    this.setState({ category: pathname || "all" });
   }
 
+  componentDidUpdate(prevProps: Props) {
+    // Check if the category in the URL has changed
+
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      const newCategory = this.props.location.pathname || "all";
+      // Update the state with the new category value
+      this.setState({ category: newCategory });
+      console.log("Route parameter has changed to:", newCategory);
+    }
+  }
+
+  static contextType = GlobalContext;
+
   render() {
-    const { links, error, isLoading } = this.state;
+    const { categories, isLoading, error } = this.context as ContextState;
+    const { category } = this.state;
+    console.log("Rendering Header with category:", category);
+
     if (isLoading) {
       return <div>Loading...</div>;
     }
 
-    if (links.length === 0) {
+    if (categories.length === 0) {
       return <div>No categories found</div>;
     }
 
     return (
-      <nav>
-        <ul>
-          {links.map((link: Category) => (
-            <li key={link.id}>
-              <Link to={`/category/${link.id}`}>{link.name}</Link>
-            </li>
-          ))}
+      <nav className="container mx-auto flex justify-between items-center">
+        <ul className="flex gap-4 h-20 font-raleway font-semibold tracking-wide flex-1">
+          <Link
+            to={`/`}
+            className={`h-full min-w-16 grid place-content-center uppercase ${
+              category === "/"
+                ? "text-scandiGreen border-b-2 border-scandiGreen"
+                : "text-black"
+            }`}
+          >
+            {"All"}
+          </Link>
+          {categories.map((link: Category) => {
+            const isActive = getFirstPathSegment(category) === link.name; // Strict comparison to avoid issues
+            return (
+              <li key={link.id}>
+                <Link
+                  to={`/${link.name}`}
+                  data-testid={
+                    isActive ? "active-category-link" : "category-link"
+                  }
+                  className={`h-full min-w-16 grid place-content-center uppercase ${
+                    isActive
+                      ? "text-scandiGreen border-b-2 border-scandiGreen"
+                      : "text-black"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
+        <img src="/shop-logo.svg" alt="Shop Logo" />
+        <div className="flex-1 flex justify-end">
+          <Cart />
+        </div>
       </nav>
     );
   }
 }
+
+export default withRouter(Header);

@@ -1,8 +1,7 @@
 import axiosInstance from "../http/http";
 import { AxiosResponse } from "axios";
-import { Category } from "../types/index"; // Import the Category type
+import { Category } from "../types/index";
 
-// Interface for categories (no need for the nested `data` object)
 interface GetCategoriesResponse {
   data: {
     categories: Category[];
