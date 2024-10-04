@@ -4,7 +4,6 @@ import { Product } from "../types";
 import { AxiosError } from "axios";
 import getProducts from "../graphql/get-products";
 import ProductCard from "../components/ProductCard";
-import { ContextState, GlobalContext } from "../context/global-context";
 
 type Props = RouteComponentProps<{ category: string }>;
 type State = {
@@ -22,8 +21,6 @@ class Products extends Component<Props, State> {
     isLoading: true,
   };
 
-  static contextType = GlobalContext;
-
   public setProducts = (products: Product[]) => {
     if (Array.isArray(products)) {
       this.setState({ products, isLoading: false });
@@ -38,7 +35,7 @@ class Products extends Component<Props, State> {
   componentDidMount() {
     const { category } = this.props.match.params; // Get the initial ID from route parameters
     this.setState({ category: category });
-    getProducts(this.setProducts).catch((error: AxiosError) => {
+    getProducts(this.setProducts, category).catch((error: AxiosError) => {
       this.setState({ error, isLoading: false });
     });
   }
@@ -46,13 +43,15 @@ class Products extends Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     // Check if the route parameters have changed
     if (prevProps.match.params.category !== this.props.match.params.category) {
-      const newId = this.props.match.params.category;
-      this.setState({ category: newId });
+      const newCategory = this.props.match.params.category;
+      getProducts(this.setProducts, newCategory).catch((error: AxiosError) => {
+        this.setState({ error, isLoading: false });
+      });
+      this.setState({ category: newCategory });
     }
   }
 
   render() {
-    const { cartModal } = this.context as ContextState;
     const { category, products } = this.state;
     console.log("products", products);
     return (

@@ -17,16 +17,17 @@ interface Price {
 }
 
 interface AttributeItem {
-  id: string; // E.g., "1", "7"
-  value: string; // E.g., "1T", "#000000"
-  displayValue: string; // E.g., "1TB", "Black"
+  id: string;
+  isActive?: boolean;
+  value: string;
+  displayValue: string;
   __typename: string;
 }
 
 interface Attribute {
-  name: string; // Attribute name, e.g., "Capacity"
-  type: string; // Type of attribute, e.g., "text", "swatch"
-  items: AttributeItem[]; // Array of items within this attribute
+  name: string;
+  type: "text" | "swatch";
+  items: AttributeItem[];
   __typename: string;
 }
 

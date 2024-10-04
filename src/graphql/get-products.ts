@@ -8,14 +8,16 @@ interface GetProductsResponse {
   };
 }
 async function getProducts(
-  setter: (products: Product[]) => void
+  setter: (products: Product[]) => void,
+  category: string
 ): Promise<void> {
   try {
+    console.log("Fetching products for category:", category);
     const response: AxiosResponse<GetProductsResponse> =
       await axiosInstance.post("", {
         query: `
           query {
-            products {
+            products (category:"${category || "all"}") {
               id
               name
               description

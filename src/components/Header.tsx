@@ -2,33 +2,46 @@ import React, { Component } from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { Category } from "../types";
 import Icons from "./Icons";
-import { ContextState, GlobalContext } from "../context/global-context";
 import { AxiosError } from "axios";
 import getFirstPathSegment from "../utils/get-first-path-segment";
 import Cart from "./Cart";
+import { globalStore } from "../context/global-store";
+import { observer } from "mobx-react";
+import getCategories from "../graphql/get-categories";
 
 type Props = RouteComponentProps<{ category: string }>;
 
 type State = {
-  links: Category[];
+  categories: Category[];
   error: null | AxiosError;
   isLoading: boolean;
-  category: string; // Change to non-nullable `string`
+  category: string;
 };
-
+@observer
 class Header extends Component<Props, State> {
   state: State = {
-    links: [],
     error: null,
     isLoading: true,
-    category: "all", // Set initial category to "all" instead of null
+    category: "/",
+    categories: [],
   };
 
   componentDidMount() {
-    const pathname = this.props.location.pathname;
-
-    // Set category state to the initial route parameter or default to "all"
-    this.setState({ category: pathname || "all" });
+    this.setState({ isLoading: true });
+    getCategories()
+      .then((data) => {
+        if (data) {
+          this.setState({ categories: data, isLoading: false });
+        } else {
+          this.setState({
+            error: new Error("Invalid data format") as AxiosError,
+            isLoading: false,
+          });
+        }
+      })
+      .catch((error: AxiosError) => {
+        this.setState({ error, isLoading: false });
+      });
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -38,20 +51,12 @@ class Header extends Component<Props, State> {
       const newCategory = this.props.location.pathname || "all";
       // Update the state with the new category value
       this.setState({ category: newCategory });
-      console.log("Route parameter has changed to:", newCategory);
     }
   }
 
-  static contextType = GlobalContext;
-
   render() {
-    const { categories, isLoading, error } = this.context as ContextState;
-    const { category } = this.state;
+    const { category, categories } = this.state;
     console.log("Rendering Header with category:", category);
-
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
 
     if (categories.length === 0) {
       return <div>No categories found</div>;

@@ -7,9 +7,7 @@ interface GetCategoriesResponse {
     categories: Category[];
   };
 }
-async function getCategories(
-  setter: (categories: Category[]) => void
-): Promise<void> {
+async function getCategories(): Promise<Category[] | null> {
   try {
     const response: AxiosResponse<GetCategoriesResponse> =
       await axiosInstance.post("", {
@@ -22,10 +20,11 @@ async function getCategories(
           }
         `,
       });
-    console.log("response.categories", response);
-    setter(response.data.data.categories); // Call the setter function with categories
+
+    return response.data.data.categories; // Call the setter function with categories
   } catch (error) {
     console.error("Error fetching categories:", error);
+    return null;
   }
 }
 

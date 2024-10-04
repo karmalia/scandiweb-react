@@ -1,21 +1,27 @@
 import React, { Component } from "react";
 import { Product } from "../types";
 import Icons from "./Icons";
+import { observer } from "mobx-react";
+import { globalStore } from "../context/global-store";
+import { Link } from "react-router-dom";
 type Props = {
   product: Product;
 };
 
 type State = {};
 
+@observer
 export default class ProductCard extends Component<Props, State> {
   state = {};
 
   render() {
+    const { addToCart } = globalStore;
     const { product } = this.props;
     return (
-      <div
+      <Link
+        to={`/${product.category}/${product.id}`}
         className="group p-4 hover:shadow-even duration-300 hover:scale-105"
-        data-testid={`product-${product.id}`}
+        data-testid={`product-${product.name}`}
       >
         <div className="relative w-full h-[440px]">
           <img
@@ -29,7 +35,10 @@ export default class ProductCard extends Component<Props, State> {
             </div>
           )}
           {product.in_stock && (
-            <button className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen">
+            <button
+              onClick={() => addToCart(product)}
+              className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen"
+            >
               <Icons.Cart className={"text-white"} />
             </button>
           )}
@@ -41,7 +50,7 @@ export default class ProductCard extends Component<Props, State> {
             {product.prices[0].amount}
           </h3>
         </div>
-      </div>
+      </Link>
     );
   }
 }
