@@ -5,7 +5,7 @@ import Icons from "./Icons";
 import { AxiosError } from "axios";
 import getFirstPathSegment from "../utils/get-first-path-segment";
 import Cart from "./Cart";
-import { globalStore } from "../context/global-store";
+import { globalStore } from "../MobX/global-store";
 import { observer } from "mobx-react";
 import getCategories from "../graphql/get-categories";
 
@@ -56,7 +56,6 @@ class Header extends Component<Props, State> {
 
   render() {
     const { category, categories } = this.state;
-    console.log("Rendering Header with category:", category);
 
     if (categories.length === 0) {
       return <div>No categories found</div>;

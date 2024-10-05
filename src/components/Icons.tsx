@@ -69,6 +69,88 @@ const Icons = {
       />
     </svg>
   ),
+  Alert: (props: any) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="800px"
+      height="800px"
+      viewBox="0 0 24 24"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M2.20164 18.4695L10.1643 4.00506C10.9021 2.66498 13.0979 2.66498 13.8357 4.00506L21.7984 18.4695C22.4443 19.6428 21.4598 21 19.9627 21H4.0373C2.54022 21 1.55571 19.6428 2.20164 18.4695Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 9V13"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 17.0195V17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  RightChevron: (props: any) => (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        width="32"
+        height="32"
+        transform="matrix(-1 0 0 1 32 0)"
+        fill="black"
+        fillOpacity="0.73"
+      />
+      <path
+        d="M13 8.09158L20.5 15.5836L13 23.0757"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  LeftChevron: (props: any) => (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        width="31.6978"
+        height="31.6978"
+        transform="matrix(0.999953 0.00966993 -0.00948818 0.999955 0.300781 0)"
+        fill="black"
+        fillOpacity="0.73"
+      />
+      <path
+        d="M18.9687 8.16618L11.5396 15.5875L18.9687 23.0088"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 };
 
 export default Icons;

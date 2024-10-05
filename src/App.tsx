@@ -5,6 +5,7 @@ import Products from "./pages/Products";
 
 import Layout from "./layout/layout";
 import ProductDetails from "./pages/ProductDetails";
+import healthCheck from "./graphql/health-check";
 class App extends Component {
   componentDidMount() {
     const link = document.createElement("link");
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path="/" component={Products} />
 
             <Route exact path={`/:category`} component={Products} />
+
             <Route
               exact
               path={`/:category/:productId`}

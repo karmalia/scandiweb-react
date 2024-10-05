@@ -1,3 +1,9 @@
+export interface ProductToAdd {
+  productId: string;
+  attributeId: string | null;
+  attributeItemId: string | null;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -16,7 +22,7 @@ interface Price {
   __typename: string;
 }
 
-interface AttributeItem {
+export interface AttributeItemType {
   id: string;
   isActive?: boolean;
   value: string;
@@ -25,9 +31,10 @@ interface AttributeItem {
 }
 
 interface Attribute {
+  id: string;
   name: string;
   type: "text" | "swatch";
-  items: AttributeItem[];
+  items: AttributeItemType[];
   __typename: string;
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Product } from "../types";
 import Icons from "./Icons";
 import { observer } from "mobx-react";
-import { globalStore } from "../context/global-store";
+import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
 type Props = {
   product: Product;
@@ -36,7 +36,14 @@ export default class ProductCard extends Component<Props, State> {
           )}
           {product.in_stock && (
             <button
-              onClick={() => addToCart(product)}
+              onClick={(e: any) => {
+                e.preventDefault();
+                addToCart({
+                  productId: product.id,
+                  attributeId: null,
+                  attributeItemId: null,
+                });
+              }}
               className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen"
             >
               <Icons.Cart className={"text-white"} />

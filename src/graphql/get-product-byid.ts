@@ -31,6 +31,7 @@ async function getProductById(productId: string): Promise<Product | null> {
                 gallery
                 category
                 attributes {
+                  id
                   name
                   type
                   items{

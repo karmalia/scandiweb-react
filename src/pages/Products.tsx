@@ -53,7 +53,6 @@ class Products extends Component<Props, State> {
 
   render() {
     const { category, products } = this.state;
-    console.log("products", products);
     return (
       <div>
         <h1 className="py-12 text-4xl font-raleway capitalize ">

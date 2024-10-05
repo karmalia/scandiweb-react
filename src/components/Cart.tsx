@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Icons from "./Icons";
-import { globalStore } from "../context/global-store";
+import { globalStore } from "../MobX/global-store";
 import { observer } from "mobx-react";
 
 type Props = {};
@@ -17,8 +17,15 @@ export default class Cart extends Component<Props, State> {
   ): void {}
 
   render() {
-    const { cartModal, cart, toggleCartModal, removeFromCart, addToCart } =
-      globalStore;
+    const {
+      cartModal,
+      cart,
+      toggleCartModal,
+      removeFromCart,
+      addToCart,
+      increaseQuantity,
+      decreaseQuantity,
+    } = globalStore;
     const { products, totalAmount, currencyId, totalItems } = cart;
     return (
       <div className="relative ">
@@ -124,14 +131,14 @@ export default class Cart extends Component<Props, State> {
                           <button
                             className="h-8 w-8 font-raleway text-2xl grid place-content-center"
                             data-testid="cart-item-amount-increase"
-                            onClick={() => addToCart(product)}
+                            onClick={() => increaseQuantity(product.id)}
                           >
                             <Icons.Plus />
                           </button>
                           <span>{product.quantity}</span>
                           <button
                             className="h-8 w-8 font-raleway text-2xl grid place-content-center"
-                            onClick={() => removeFromCart(product.id)}
+                            onClick={() => decreaseQuantity(product.id)}
                             data-testid="cart-item-amount-decrease"
                           >
                             <Icons.Minus />
