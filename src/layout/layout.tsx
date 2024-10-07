@@ -7,6 +7,7 @@ import { globalStore } from "../MobX/global-store";
 import healthCheck from "../graphql/health-check";
 import Icons from "../components/Icons";
 import Spinner from "../components/shared/Spinner";
+import CartContent from "../components/CartContent/CartContent";
 
 type Props = RouteComponentProps & {
   children: React.ReactNode;
@@ -42,11 +43,18 @@ class Layout extends Component<Props, State> {
   }
 
   render() {
-    const { toggleCartModal, cartModal } = globalStore;
+    const {
+      cart,
+      increaseQuantity,
+      decreaseQuantity,
+      toggleCartModal,
+      cartModal,
+    } = globalStore;
+    const { products, totalAmount, currencyId, totalItems } = cart;
     const { status, isLoading } = this.state;
 
     return (
-      <div className="mx-auto antialiased">
+      <>
         {isLoading && <Spinner />}
         {!isLoading && status === null && (
           <div className="h-screen w-screen flex justify-center items-center font-raleway">
@@ -63,18 +71,20 @@ class Layout extends Component<Props, State> {
         {status && (
           <>
             <Header {...this.props} />
-            <div className="relative">
+            <div className="relative mx-auto antialiased min-h-dvh h-auto border border-transparent">
               <main className="container mx-auto">{this.props.children}</main>
               {cartModal && (
                 <div
-                  className="w-full h-full bg-black/20 absolute top-0 left-0"
+                  className="w-full h-full min-h-dvh bg-black/20 absolute top-0 left-0 flex justify-end items-start pr-40"
                   onClick={toggleCartModal}
-                />
+                >
+                  <CartContent />
+                </div>
               )}
             </div>
           </>
         )}
-      </div>
+      </>
     );
   }
 }

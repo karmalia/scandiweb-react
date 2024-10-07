@@ -62,7 +62,7 @@ class Header extends Component<Props, State> {
     }
 
     return (
-      <nav className="container mx-auto flex justify-between items-center">
+      <nav className="container mx-auto flex justify-between items-center ">
         <ul className="flex gap-4 h-20 font-raleway font-semibold tracking-wide flex-1">
           <Link
             to={`/`}

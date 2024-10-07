@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import Products from "./pages/Products";
-
+import "react-toastify/dist/ReactToastify.css";
 import Layout from "./layout/layout";
 import ProductDetails from "./pages/ProductDetails";
 import healthCheck from "./graphql/health-check";
+import { Bounce, ToastContainer } from "react-toastify";
 class App extends Component {
   componentDidMount() {
     const link = document.createElement("link");
@@ -30,6 +31,18 @@ class App extends Component {
               component={ProductDetails}
             />
           </Switch>
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={true}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            pauseOnHover
+            theme="colored"
+            transition={Bounce}
+          />
         </Layout>
       </Router>
     );

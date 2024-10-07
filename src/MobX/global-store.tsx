@@ -1,10 +1,11 @@
 import { observable, action, makeObservable } from "mobx";
 import { Product, ProductToAdd } from "../types";
 import getProductById from "../graphql/get-product-byid";
+import { Bounce, toast } from "react-toastify";
 
 interface BasketProduct extends Product {
   quantity: number;
-  attributeIds: string;
+  unique: string;
 }
 
 interface Basket {
@@ -37,46 +38,102 @@ class GlobalStore {
     this.cartModal = !this.cartModal;
   };
 
-  addToCart = (productToAdd: ProductToAdd) => {
-    // If addToCart works on product listing page. then get the item from the server
-    const newProduct = {
-      productId: productToAdd.productId,
-      attributeId: productToAdd.attributeId,
-      attributeItemId: productToAdd.attributeItemId,
-    };
-    if (
-      newProduct.attributeId === null ||
-      newProduct.attributeItemId === null
-    ) {
-      getProductById(productToAdd.productId).then((product) => {
-        if (!product) {
-          return null;
-        }
-        if (product) {
-          console.log(product, "Testssss");
-          newProduct.attributeId = product.attributes[0].id;
-          newProduct.attributeItemId = product.attributes[0].items[0].id;
-        }
-      });
+  // Add to cart in product listing page, uses default attributes
+  quickShop = async (productId: string) => {
+    const response = await getProductById(productId);
+    if (!response) return toast.error("Error fetching product details");
+    if (response.errors) {
+      toast.error(response.errors[0].message);
+      return;
     }
+    const hasAttribute =
+      Array.isArray(response.data.productById.attributes) &&
+      response.data.productById.attributes.length > 0;
+
     const existingProduct = this.cart.products.find(
-      (item) =>
-        item.attributeIds ===
-        `${newProduct.attributeId}-${newProduct.attributeItemId}`
+      (item) => item.id === productId
     );
+
     if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      getProductById(productToAdd.productId).then((product) => {
-        if (product)
+      if (hasAttribute) {
+        //Default Atrributes - Quick Shop
+        const attributesConcat = response.data.productById.attributes
+          .map(
+            (attr) =>
+              `${response.data.productById.id}-${attr.name}-${attr.items[0].id}`
+          )
+          .join("-");
+        const hasSameAttribute = this.cart.products.find(
+          (item) => item.unique === attributesConcat
+        );
+
+        if (hasSameAttribute) {
+          existingProduct.quantity += 1;
+          this.cart.totalItems += 1;
+        } else {
           this.cart.products.push({
-            ...product,
+            ...response.data.productById,
             quantity: 1,
-            attributeIds: `${product.attributes[0].id}-${product.attributes[0].items[0].id}`,
+            unique: attributesConcat || "",
           });
+        }
+      } else {
+        existingProduct.quantity += 1;
+        this.cart.totalItems += 1;
+      }
+    } else {
+      this.cart.products.push({
+        ...response.data.productById,
+        attributes: response.data.productById.attributes.map((attr) => ({
+          ...attr,
+          items: attr.items.map((item, index) => ({
+            ...item,
+            isActive: index === 0,
+          })),
+        })),
+        quantity: 1,
+        unique: hasAttribute
+          ? response.data.productById.attributes
+              .map(
+                (attr) =>
+                  `${response.data.productById.id}-${attr.name}-${attr.items[0].id}`
+              )
+              .join("-")
+          : "",
+      });
+      this.cart.totalItems += 1;
+    }
+  };
+
+  addToCart = (productToAdd: Product, selectedAttributes: string) => {
+    // If addToCart works on product listing page. then get the item from the server
+
+    const existingProduct = this.cart.products.find(
+      (item) => item.id === productToAdd.id
+    );
+    this.cart.totalItems += 1;
+
+    if (existingProduct) {
+      const findSameAttribute = this.cart.products.find(
+        (item) => item.unique === selectedAttributes
+      );
+
+      if (findSameAttribute) {
+        findSameAttribute.quantity += 1;
+      } else {
+        this.cart.products.push({
+          ...productToAdd,
+          quantity: 1,
+          unique: selectedAttributes,
+        });
+      }
+    } else {
+      this.cart.products.push({
+        ...productToAdd,
+        quantity: 1,
+        unique: selectedAttributes,
       });
     }
-    this.cart.totalItems += 1;
   };
 
   increaseQuantity = (productId: string) => {

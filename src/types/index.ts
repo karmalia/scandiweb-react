@@ -24,7 +24,7 @@ interface Price {
 
 export interface AttributeItemType {
   id: string;
-  isActive?: boolean;
+  isSelected?: boolean;
   value: string;
   displayValue: string;
   __typename: string;

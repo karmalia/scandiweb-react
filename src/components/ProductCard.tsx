@@ -4,6 +4,7 @@ import Icons from "./Icons";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 type Props = {
   product: Product;
 };
@@ -15,7 +16,7 @@ export default class ProductCard extends Component<Props, State> {
   state = {};
 
   render() {
-    const { addToCart } = globalStore;
+    const { quickShop } = globalStore;
     const { product } = this.props;
     return (
       <Link
@@ -38,11 +39,7 @@ export default class ProductCard extends Component<Props, State> {
             <button
               onClick={(e: any) => {
                 e.preventDefault();
-                addToCart({
-                  productId: product.id,
-                  attributeId: null,
-                  attributeItemId: null,
-                });
+                quickShop(product.id);
               }}
               className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen"
             >

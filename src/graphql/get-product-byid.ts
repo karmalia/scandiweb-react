@@ -6,8 +6,11 @@ interface GetProductsResponse {
   data: {
     productById: Product;
   };
+  errors: [{ message: string }];
 }
-async function getProductById(productId: string): Promise<Product | null> {
+async function getProductById(
+  productId: string
+): Promise<GetProductsResponse | null> {
   try {
     const response: AxiosResponse<GetProductsResponse> =
       await axiosInstance.post("", {
@@ -47,7 +50,7 @@ async function getProductById(productId: string): Promise<Product | null> {
           }
         `,
       });
-    return response.data.data.productById as Product;
+    return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;

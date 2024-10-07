@@ -2,22 +2,27 @@ import React, { Component } from "react";
 import { AttributeItemType } from "../../types";
 //Dinamik olarak db den alınabilir
 interface AttributeItemProps {
-  isActive?: boolean;
+  isSelected: boolean;
+  attributeId: string;
   item: AttributeItemType;
   attributeType: string;
+  handleAttributeSelection: (attributeId: string, itemId: string) => void;
 }
 
 type State = {};
 
 class AttributeItemText extends Component<AttributeItemProps, State> {
   render() {
+    const { item, attributeId } = this.props;
+    const { displayValue, value, id, isSelected } = item;
     return (
       <div
         className={`${
-          this.props.isActive ? "bg-black text-white" : "bg-white text-black"
-        } border-black border w-[100px] text-center font-roboto`}
+          isSelected ? "bg-black text-white" : "bg-white text-black"
+        } border-black border w-[100px] text-center font-roboto cursor-pointer`}
+        onClick={() => this.props.handleAttributeSelection(attributeId, id)}
       >
-        {this.props.item.displayValue}
+        {displayValue}
       </div>
     );
   }
@@ -25,7 +30,17 @@ class AttributeItemText extends Component<AttributeItemProps, State> {
 
 class AttributeItemSwatch extends Component<AttributeItemProps, State> {
   render() {
-    return <div>AttributeItemSwatch</div>;
+    const { item, attributeId } = this.props;
+    const { displayValue, value, id, isSelected } = item;
+    return (
+      <div
+        className={`${
+          isSelected ? "bg-black text-white" : "bg-white text-black"
+        } border border-black w-8 h-8 inline-block`}
+        style={{ backgroundColor: value }}
+        onClick={() => this.props.handleAttributeSelection(attributeId, id)}
+      />
+    );
   }
 }
 
