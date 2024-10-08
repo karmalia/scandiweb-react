@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { globalStore } from "../../MobX/global-store";
 import { observer } from "mobx-react";
-import Icons from "../Icons";
+import Icons from "../shared/Icons";
+import AttributeItem from "../AttributeItem/AttributeItem";
+import { twMerge } from "tailwind-merge";
+import getAttributeItemTypeClassName from "../../utils/get-attribute-item-type-classname";
+import getUniqueId from "../../utils/get-unique-id";
 
 type Props = {};
 
@@ -14,7 +18,12 @@ export default class CartContent extends Component<Props, State> {
     const { cart, increaseQuantity, decreaseQuantity } = globalStore;
     const { products, totalAmount, currencyId, totalItems } = cart;
     return (
-      <div className="bg-white w-[325px] min-w-[300px] z-10  h-auto space-y-8 top-0 right-40 translate-x-[10%] py-8 px-4">
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        className="bg-white w-[330px] min-w-[300px] z-10  h-auto space-y-8 top-0 right-40 translate-x-[10%] py-8 px-4"
+      >
         <h1 className="font-raleway">
           <span className="font-bold text-2xl">My Bag, </span>
           <span className="text-xl">
@@ -26,73 +35,44 @@ export default class CartContent extends Component<Props, State> {
             cart.products.map((product) => {
               return (
                 <div key={product.id} className="flex flex-1 ">
-                  <div className="w-2/3">
-                    <h1 className="font-raleway text-2xl font-[300] tracking-wide">
+                  <div className="w-2/3 space-y-2">
+                    <h1 className="font-raleway text-2xl tracking-wide font-bold">
                       {product.name}
                     </h1>
                     <p className="font-raleway font-[600]">
                       {product.prices[0].currency.symbol}
-                      {product.prices[0].amount}
+                      {product.totalPrice.toFixed(2)}
                     </p>
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                       {product.attributes.map((attribute) => (
                         <div
                           key={attribute.name}
-                          className="flex flex-col gap-4"
+                          className="flex flex-col gap-1"
                           data-testid={`cart-item-attribute-${attribute.name}`}
                         >
-                          <p className="font-raleway font-[400]">
+                          <p className="font-raleway font-[400] text-lg">
                             {attribute.name}:
                           </p>
-                          <p className="flex font-raleway font-[300] gap-2">
+                          <div className="flex font-raleway  flex-wrap font-[300] gap-1">
                             {attribute.items.map((item) => {
-                              switch (attribute.type) {
-                                case "swatch":
-                                  return (
-                                    <span
-                                      key={item.id}
-                                      data-testid={`cart-item-attribute-${
-                                        attribute.name
-                                      }-${attribute.name}-${
-                                        item.isSelected && "selected"
-                                      }`}
-                                      className="h-8 w-8  inline-block"
-                                      style={{
-                                        backgroundColor: item.value,
-                                      }}
-                                    ></span>
-                                  );
-
-                                case "text":
-                                  return (
-                                    <div
-                                      data-testid={`cart-item-attribute-${
-                                        attribute.name
-                                      }-${attribute.name}-${
-                                        item.isSelected && "selected"
-                                      }`}
-                                      className={`${
-                                        item.isSelected
-                                          ? " bg-black text-white"
-                                          : "bg-white text-black"
-                                      } border border-black min-w-[60px] text-center`}
-                                      key={item.id}
-                                    >
-                                      {item.value}
-                                    </div>
-                                  );
-
-                                default:
-                                  <span>Error</span>;
-                                  break;
-                              }
+                              return (
+                                <AttributeItem
+                                  item={item}
+                                  attributeType={attribute.type}
+                                  isSelected={item.isSelected!}
+                                  attributeId={attribute.id}
+                                  className={getAttributeItemTypeClassName(
+                                    attribute.type
+                                  )}
+                                />
+                              );
                             })}
-                          </p>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="flex flex-col w-1/3">
+                  <div className="flex flex-col w-1/3 items-center">
                     <img
                       src={product.gallery[0]}
                       alt={product.name}
@@ -102,14 +82,20 @@ export default class CartContent extends Component<Props, State> {
                       <button
                         className="h-8 w-8 font-raleway text-2xl grid place-content-center"
                         data-testid="cart-item-amount-increase"
-                        onClick={() => increaseQuantity(product.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          increaseQuantity(getUniqueId(product));
+                        }}
                       >
                         <Icons.Plus />
                       </button>
                       <span>{product.quantity}</span>
                       <button
                         className="h-8 w-8 font-raleway text-2xl grid place-content-center"
-                        onClick={() => decreaseQuantity(product.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          decreaseQuantity(getUniqueId(product));
+                        }}
                         data-testid="cart-item-amount-decrease"
                       >
                         <Icons.Minus />
@@ -120,6 +106,7 @@ export default class CartContent extends Component<Props, State> {
               );
             })}
         </div>
+        <p>{totalAmount.toFixed(2)}</p>
       </div>
     );
   }

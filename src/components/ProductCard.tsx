@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Product } from "../types";
-import Icons from "./Icons";
+import Icons from "./shared/Icons";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
@@ -40,6 +40,7 @@ export default class ProductCard extends Component<Props, State> {
               onClick={(e: any) => {
                 e.preventDefault();
                 quickShop(product.id);
+                window.scrollTo(0, 0);
               }}
               className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen"
             >
@@ -47,7 +48,7 @@ export default class ProductCard extends Component<Props, State> {
             </button>
           )}
         </div>
-        <div className="font-raleway text-xl  pt-8">
+        <div className="font-raleway text-xl pt-8 space-y-4">
           <h2>{product.name}</h2>
           <h3 className="text-[#8D8F9A]">
             {product.prices[0].currency.symbol}

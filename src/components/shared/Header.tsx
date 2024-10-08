@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import { Category } from "../types";
+import { Category } from "../../types";
 import Icons from "./Icons";
 import { AxiosError } from "axios";
-import getFirstPathSegment from "../utils/get-first-path-segment";
-import Cart from "./Cart";
-import { globalStore } from "../MobX/global-store";
+import getFirstPathSegment from "../../utils/get-first-path-segment";
+import Cart from "../Cart";
+import { globalStore } from "../../MobX/global-store";
 import { observer } from "mobx-react";
-import getCategories from "../graphql/get-categories";
+import getCategories from "../../graphql/get-categories";
 
 type Props = RouteComponentProps<{ category: string }>;
 
@@ -63,10 +63,10 @@ class Header extends Component<Props, State> {
 
     return (
       <nav className="container mx-auto flex justify-between items-center ">
-        <ul className="flex gap-4 h-20 font-raleway font-semibold tracking-wide flex-1">
+        <ul className="flex gap-4 h-20 font-raleway font-semibold flex-1">
           <Link
             to={`/`}
-            className={`h-full min-w-16 grid place-content-center uppercase ${
+            className={`h-full min-w-16 grid place-content-center uppercase tracking-wider ${
               category === "/"
                 ? "text-scandiGreen border-b-2 border-scandiGreen"
                 : "text-black"
@@ -83,7 +83,7 @@ class Header extends Component<Props, State> {
                   data-testid={
                     isActive ? "active-category-link" : "category-link"
                   }
-                  className={`h-full min-w-16 grid place-content-center uppercase ${
+                  className={`h-full min-w-16 grid place-content-center tracking-wider uppercase ${
                     isActive
                       ? "text-scandiGreen border-b-2 border-scandiGreen"
                       : "text-black"

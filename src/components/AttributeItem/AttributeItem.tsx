@@ -1,26 +1,35 @@
 import React, { Component } from "react";
 import { AttributeItemType } from "../../types";
+import { twMerge } from "tailwind-merge";
 //Dinamik olarak db den alınabilir
+
 interface AttributeItemProps {
   isSelected: boolean;
   attributeId: string;
   item: AttributeItemType;
   attributeType: string;
-  handleAttributeSelection: (attributeId: string, itemId: string) => void;
+  handleAttributeSelection?: (attributeId: string, itemId: string) => void;
+  className?: string;
 }
 
 type State = {};
 
 class AttributeItemText extends Component<AttributeItemProps, State> {
   render() {
-    const { item, attributeId } = this.props;
-    const { displayValue, value, id, isSelected } = item;
+    const { item, attributeId, handleAttributeSelection, className } =
+      this.props;
+    const { displayValue, id, isSelected } = item;
     return (
       <div
-        className={`${
-          isSelected ? "bg-black text-white" : "bg-white text-black"
-        } border-black border w-[100px] text-center font-roboto cursor-pointer`}
-        onClick={() => this.props.handleAttributeSelection(attributeId, id)}
+        className={twMerge(
+          `${isSelected ? "bg-black text-white" : "bg-white text-black"} ${
+            handleAttributeSelection && "cursor-pointer"
+          } border-black border w-[80px] text-center font-roboto`,
+          className && className
+        )}
+        onClick={() =>
+          handleAttributeSelection && handleAttributeSelection(attributeId, id)
+        }
       >
         {displayValue}
       </div>
@@ -30,15 +39,26 @@ class AttributeItemText extends Component<AttributeItemProps, State> {
 
 class AttributeItemSwatch extends Component<AttributeItemProps, State> {
   render() {
-    const { item, attributeId } = this.props;
-    const { displayValue, value, id, isSelected } = item;
+    const { item, attributeId, handleAttributeSelection, className } =
+      this.props;
+    const { value, id, isSelected } = item;
     return (
       <div
-        className={`${
-          isSelected ? "bg-black text-white" : "bg-white text-black"
-        } border border-black w-8 h-8 inline-block`}
-        style={{ backgroundColor: value }}
-        onClick={() => this.props.handleAttributeSelection(attributeId, id)}
+        className={twMerge(
+          `w-8 h-8 ${
+            isSelected
+              ? "outline outline-scandiGreen outline-offset-1 outline-2"
+              : ""
+          } ${handleAttributeSelection && "cursor-pointer"}`,
+          className && className
+        )}
+        style={{
+          backgroundColor: value,
+        }}
+        onClick={() =>
+          handleAttributeSelection && handleAttributeSelection(attributeId, id)
+        }
+        data-testid={`attribute-item-${id}-${isSelected ? "selected" : ""}`}
       />
     );
   }

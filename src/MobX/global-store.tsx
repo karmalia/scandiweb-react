@@ -3,9 +3,12 @@ import { Product, ProductToAdd } from "../types";
 import getProductById from "../graphql/get-product-byid";
 import { Bounce, toast } from "react-toastify";
 
+import { makePersistable } from "mobx-persist-store";
+import getUniqueId from "../utils/get-unique-id";
 interface BasketProduct extends Product {
   quantity: number;
   unique: string;
+  totalPrice: number;
 }
 
 interface Basket {
@@ -32,6 +35,12 @@ class GlobalStore {
       error: observable,
       toggleCartModal: action,
     });
+
+    makePersistable(this, {
+      name: "GlobalStore",
+      properties: ["cart", "cartModal"], // List properties to persist
+      storage: window.localStorage, // Choose localStorage as the storage medium
+    });
   }
 
   toggleCartModal = () => {
@@ -57,48 +66,44 @@ class GlobalStore {
     if (existingProduct) {
       if (hasAttribute) {
         //Default Atrributes - Quick Shop
-        const attributesConcat = response.data.productById.attributes
-          .map(
-            (attr) =>
-              `${response.data.productById.id}-${attr.name}-${attr.items[0].id}`
-          )
-          .join("-");
+        const attributesConcat = getUniqueId(response.data.productById, true);
         const hasSameAttribute = this.cart.products.find(
           (item) => item.unique === attributesConcat
         );
 
         if (hasSameAttribute) {
           existingProduct.quantity += 1;
+          existingProduct.totalPrice +=
+            response.data.productById.prices[0].amount;
           this.cart.totalItems += 1;
         } else {
           this.cart.products.push({
             ...response.data.productById,
             quantity: 1,
             unique: attributesConcat || "",
+            totalPrice: response.data.productById.prices[0].amount,
           });
         }
       } else {
+        existingProduct.totalPrice +=
+          response.data.productById.prices[0].amount;
         existingProduct.quantity += 1;
         this.cart.totalItems += 1;
       }
     } else {
       this.cart.products.push({
         ...response.data.productById,
+        totalPrice: response.data.productById.prices[0].amount,
         attributes: response.data.productById.attributes.map((attr) => ({
           ...attr,
           items: attr.items.map((item, index) => ({
             ...item,
-            isActive: index === 0,
+            isSelected: index === 0,
           })),
         })),
         quantity: 1,
         unique: hasAttribute
-          ? response.data.productById.attributes
-              .map(
-                (attr) =>
-                  `${response.data.productById.id}-${attr.name}-${attr.items[0].id}`
-              )
-              .join("-")
+          ? getUniqueId(response.data.productById, true)
           : "",
       });
       this.cart.totalItems += 1;
@@ -120,10 +125,12 @@ class GlobalStore {
 
       if (findSameAttribute) {
         findSameAttribute.quantity += 1;
+        findSameAttribute.totalPrice += productToAdd.prices[0].amount;
       } else {
         this.cart.products.push({
           ...productToAdd,
           quantity: 1,
+          totalPrice: productToAdd.prices[0].amount,
           unique: selectedAttributes,
         });
       }
@@ -132,29 +139,32 @@ class GlobalStore {
         ...productToAdd,
         quantity: 1,
         unique: selectedAttributes,
+        totalPrice: productToAdd.prices[0].amount,
       });
     }
   };
 
-  increaseQuantity = (productId: string) => {
+  increaseQuantity = (uniqueId: string) => {
     const existingProduct = this.cart.products.find(
-      (item) => item.id === productId
+      (item) => item.unique === uniqueId
     );
     if (existingProduct) {
       existingProduct.quantity += 1;
+      existingProduct.totalPrice += existingProduct.prices[0].amount;
     }
     this.cart.totalItems += 1;
   };
 
-  decreaseQuantity = (productId: string) => {
+  decreaseQuantity = (uniqueId: string) => {
     const existingProduct = this.cart.products.find(
-      (item) => item.id === productId
+      (item) => item.unique === uniqueId
     );
     if (existingProduct) {
       existingProduct.quantity -= 1;
+      existingProduct.totalPrice -= existingProduct.prices[0].amount;
       if (existingProduct.quantity === 0) {
         this.cart.products = this.cart.products.filter(
-          (item) => item.id !== productId
+          (item) => item.unique !== uniqueId
         );
       }
     }

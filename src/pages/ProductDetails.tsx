@@ -3,11 +3,12 @@ import { Product, ProductToAdd } from "../types";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import getProductById from "../graphql/get-product-byid";
 import Spinner from "../components/shared/Spinner";
-import Icons from "../components/Icons";
+import Icons from "../components/shared/Icons";
 import AttributeItem from "../components/AttributeItem/AttributeItem";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
+import getUniqueId from "../utils/get-unique-id";
 
 type State = {
   product: Product | null;
@@ -174,15 +175,7 @@ class ProductDetails extends Component<Props, State> {
             </div>
             <button
               onClick={() => {
-                let selectedAttrbutes = product.attributes
-                  .map(
-                    (attr) =>
-                      `${product.id}-${attr.name}-${
-                        attr.items.find((item) => item.isSelected)?.id
-                      }`
-                  )
-                  .join("-");
-                addToCart(product, selectedAttrbutes);
+                addToCart(product, getUniqueId(product));
               }}
               className="px-16 py-4 bg-scandiGreen text-white font-raleway font-semibold"
             >

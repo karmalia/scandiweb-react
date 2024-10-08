@@ -1,36 +1,21 @@
 import { Component } from "react";
-import Icons from "./Icons";
+import Icons from "./shared/Icons";
 import { globalStore } from "../MobX/global-store";
 import { observer } from "mobx-react";
 
-type Props = {};
-
-type State = {};
 @observer
-export default class Cart extends Component<Props, State> {
-  state = {};
-
-  componentDidUpdate(
-    prevProps: Readonly<Props>,
-    prevState: Readonly<State>,
-    snapshot?: any
-  ): void {}
-
+export default class Cart extends Component {
   render() {
-    const {
-      cartModal,
-      cart,
-      toggleCartModal,
-      increaseQuantity,
-      decreaseQuantity,
-    } = globalStore;
+    const { cart, toggleCartModal } = globalStore;
     const { products, totalAmount, currencyId, totalItems } = cart;
     return (
       <div className="relative ">
         <button
           data-testid="cart-btn"
-          onClick={toggleCartModal}
-          className="bg-white relative"
+          onClick={(e: any) => {
+            toggleCartModal();
+          }}
+          className="bg-white relative z-10"
         >
           <Icons.Cart />
           <div

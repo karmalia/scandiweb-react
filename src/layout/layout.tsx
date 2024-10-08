@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
 
-import Header from "../components/Header";
+import Header from "../components/shared/Header";
 import { globalStore } from "../MobX/global-store";
 import healthCheck from "../graphql/health-check";
-import Icons from "../components/Icons";
+import Icons from "../components/shared/Icons";
 import Spinner from "../components/shared/Spinner";
 import CartContent from "../components/CartContent/CartContent";
 
