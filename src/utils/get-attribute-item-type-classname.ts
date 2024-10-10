@@ -3,7 +3,7 @@ export default function getAttributeItemTypeClassName(
 ): string {
   switch (attributeItemType) {
     case "text":
-      return "w-16 text-sm text-center grid place-content-center h-6";
+      return "w-16 text-sm text-center grid place-content-center";
     case "swatch":
       return "w-6 h-6";
     default:

@@ -1,32 +1,34 @@
-import React, { Component } from "react";
+import { Component, PureComponent } from "react";
 import { globalStore } from "../../MobX/global-store";
 import { observer } from "mobx-react";
 import Icons from "../shared/Icons";
 import AttributeItem from "../AttributeItem/AttributeItem";
-import { twMerge } from "tailwind-merge";
+
 import getAttributeItemTypeClassName from "../../utils/get-attribute-item-type-classname";
 import getUniqueId from "../../utils/get-unique-id";
+import insertOrder from "../../graphql/mutations/insert-order";
 
-type Props = {};
-
-type State = {};
 @observer
-export default class CartContent extends Component<Props, State> {
-  state = {};
-
+export default class CartContent extends PureComponent {
   render() {
-    const { cart, increaseQuantity, decreaseQuantity } = globalStore;
-    const { products, totalAmount, currencyId, totalItems } = cart;
+    const {
+      cart,
+      increaseQuantity,
+      decreaseQuantity,
+      resetCart,
+      toggleCartModal,
+    } = globalStore;
+    const { totalAmount, currencyId, totalItems } = cart;
     return (
       <div
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="bg-white w-[330px] min-w-[300px] z-10  h-auto space-y-8 top-0 right-40 translate-x-[10%] py-8 px-4"
+        className="bg-white w-[330px] min-w-[300px] z-10  h-auto space-y-8 py-8 px-4"
       >
         <h1 className="font-raleway">
           <span className="font-bold text-2xl">My Bag, </span>
-          <span className="text-xl">
+          <span className="text-lg">
             {totalItems > 0 ? `${totalItems} items` : " is empty"}
           </span>
         </h1>
@@ -106,7 +108,22 @@ export default class CartContent extends Component<Props, State> {
               );
             })}
         </div>
-        <p>{totalAmount.toFixed(2)}</p>
+        <p className="font-raleway text-xl">
+          {currencyId}
+          {totalAmount.toFixed(2)}
+        </p>
+        <button
+          className="bg-scandiGreen text-white font-raleway text-lg py-2 px-4 w-full tracking-wide hover:bg-scandiGreen/80"
+          onClick={async () => {
+            const response = await insertOrder(cart);
+            if (response) {
+              resetCart();
+              toggleCartModal();
+            }
+          }}
+        >
+          PLACE ORDER
+        </button>
       </div>
     );
   }

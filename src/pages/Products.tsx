@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { Product } from "../types";
 import { AxiosError } from "axios";
-import getProducts from "../graphql/get-products";
+import getProducts from "../graphql/queries/get-products";
 import ProductCard from "../components/ProductCard";
+import Spinner from "../components/shared/Spinner";
 
 type Props = RouteComponentProps<{ category: string }>;
 type State = {
@@ -44,6 +45,7 @@ class Products extends Component<Props, State> {
     // Check if the route parameters have changed
     if (prevProps.match.params.category !== this.props.match.params.category) {
       const newCategory = this.props.match.params.category;
+      this.setState({ isLoading: true });
       getProducts(this.setProducts, newCategory).catch((error: AxiosError) => {
         this.setState({ error, isLoading: false });
       });
@@ -52,16 +54,18 @@ class Products extends Component<Props, State> {
   }
 
   render() {
-    const { category, products } = this.state;
+    const { category, products, isLoading } = this.state;
     return (
       <div>
-        <h1 className="py-12 text-4xl font-raleway capitalize ">
+        <h1 className="pt-12 pb-6 text-3xl lg:text-4xl font-raleway capitalize  px-4">
           {category || "All"}
         </h1>
-        <section className="grid grid-cols-3 gap-12 ">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4 md:gap-2">
+          {products &&
+            products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          {isLoading && <Spinner />}
         </section>
       </div>
     );

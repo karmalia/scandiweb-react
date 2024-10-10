@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 type Props = {
   product: Product;
 };
@@ -26,7 +27,7 @@ export default class ProductCard extends Component<Props, State> {
       >
         <div className="relative w-full h-[440px]">
           <img
-            className="object-cover w-full h-full"
+            className="object-contain w-full h-full"
             src={product.gallery[0]}
             alt={product.name}
           />
@@ -40,7 +41,6 @@ export default class ProductCard extends Component<Props, State> {
               onClick={(e: any) => {
                 e.preventDefault();
                 quickShop(product.id);
-                window.scrollTo(0, 0);
               }}
               className="absolute -bottom-8 opacity-0 group-hover:opacity-100 duration-300 h-12 w-12 grid place-content-center right-4 p-4 rounded-full bg-scandiGreen"
             >
@@ -48,9 +48,14 @@ export default class ProductCard extends Component<Props, State> {
             </button>
           )}
         </div>
-        <div className="font-raleway text-xl pt-8 space-y-4">
+        <div
+          className={twMerge(
+            "font-raleway text-xl pt-8 space-y-4",
+            product.in_stock ? "text-black" : "text-gray-400"
+          )}
+        >
           <h2>{product.name}</h2>
-          <h3 className="text-[#8D8F9A]">
+          <h3 className="font-bold">
             {product.prices[0].currency.symbol}
             {product.prices[0].amount}
           </h3>

@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 export default class Cart extends Component {
   render() {
     const { cart, toggleCartModal } = globalStore;
-    const { products, totalAmount, currencyId, totalItems } = cart;
+    const { totalItems } = cart;
     return (
       <div className="relative ">
         <button

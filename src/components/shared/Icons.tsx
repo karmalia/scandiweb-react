@@ -30,18 +30,18 @@ const Icons = {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_92234_46)">
+      <g clipPath="url(#clip0_92234_46)">
         <path
           d="M12 8V16"
           stroke="#1D1F22"
           strokeLinecap="round"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
         />
         <path
           d="M8 12H16"
           stroke="#1D1F22"
           strokeLinecap="round"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
         />
         <rect x="0.5" y="0.5" width="23" height="23" stroke="#1D1F22" />
       </g>
@@ -65,7 +65,7 @@ const Icons = {
         d="M8 12H16"
         stroke="#1D1F22"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   ),

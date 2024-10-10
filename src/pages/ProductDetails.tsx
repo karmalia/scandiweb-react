@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Product, ProductToAdd } from "../types";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import getProductById from "../graphql/get-product-byid";
+import getProductById from "../graphql/queries/get-product-byid";
 import Spinner from "../components/shared/Spinner";
 import Icons from "../components/shared/Icons";
 import AttributeItem from "../components/AttributeItem/AttributeItem";
@@ -9,7 +9,8 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import getUniqueId from "../utils/get-unique-id";
-
+import parse from "html-react-parser";
+import { twMerge } from "tailwind-merge";
 type State = {
   product: Product | null;
   isLoading: boolean;
@@ -102,49 +103,67 @@ class ProductDetails extends Component<Props, State> {
 
     if (product) {
       return (
-        <div className="mt-12 flex justify-between gap-12">
-          <div className="flex h-[calc(6rem_*_5)] flex-1 gap-4">
-            <div className="flex flex-col overflow-y-auto gap-6">
-              {product.gallery.map((imgUrl, index) => (
-                <div
-                  className="w-24 h-24 cursor-pointer"
-                  onClick={() => this.setState({ currentImage: index })}
-                >
-                  <img
-                    className="h-full w-full object-contain select-none"
-                    src={imgUrl}
-                  />
-                </div>
-              ))}
+        <div className="mt-12 px-4 flex lg:flex-row flex-col lg:flex-nowrap flex-wrapjustify-between gap-12">
+          <div className="flex h-auto lg:h-[calc(6rem_*_5)] w-full lg:flex-1 gap-4 lg:flex-row flex-col-reverse">
+            <div
+              className="flex flex-col overflow-y-auto gap-6 h-auto"
+              data-testid="product-gallery"
+            >
+              {product &&
+                product.gallery.map((imgUrl, index) => (
+                  <div
+                    key={index + imgUrl}
+                    className={twMerge(
+                      "w-24 h-24 cursor-pointer duration-300 ease-linear",
+                      this.state.currentImage === index &&
+                        "border border-scandiGreen"
+                    )}
+                    onClick={() => this.setState({ currentImage: index })}
+                  >
+                    <img
+                      className="h-full w-full object-contain select-none"
+                      src={imgUrl}
+                    />
+                  </div>
+                ))}
             </div>
             <div className="flex-1 relative ">
               <img
-                className="w-full h-full object-contain select-none"
+                key={product.gallery[this.state.currentImage]}
+                className="w-full h-full object-contain select-none animate-fade animate-once animate-ease-out"
                 src={product.gallery[this.state.currentImage]}
               />
-              <Icons.LeftChevron
-                className="absolute top-1/2 left-4 w-10 h-10 cursor-pointer"
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  this.handleArrows("left");
-                }}
-              />
-              <Icons.RightChevron
-                className="absolute top-1/2 right-4 w-10 h-10 cursor-pointer"
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  this.handleArrows("right");
-                }}
-              />
+              {product && product.gallery.length > 1 && (
+                <>
+                  <Icons.LeftChevron
+                    className="absolute top-1/2 left-4 w-10 h-10 cursor-pointer"
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      this.handleArrows("left");
+                    }}
+                  />
+                  <Icons.RightChevron
+                    className="absolute top-1/2 right-4 w-10 h-10 cursor-pointer"
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      this.handleArrows("right");
+                    }}
+                  />
+                </>
+              )}
             </div>
           </div>
-          <div className="w-2/5 space-y-6 ">
+          <div className="lg:w-2/5 w-full space-y-6">
             <h1 className="text-3xl font-raleway font-[600]">
               {product?.name}
             </h1>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               {product?.attributes.map((attribute) => (
-                <div key={attribute.id} className="space-y-2">
+                <div
+                  key={attribute.id}
+                  className="space-y-2"
+                  data-testid={`product-attribute-${attribute.name}`}
+                >
                   <label className="text-xl font-semibold font-roboto tracking-wide uppercase">
                     {attribute.name}:
                   </label>
@@ -177,11 +196,18 @@ class ProductDetails extends Component<Props, State> {
               onClick={() => {
                 addToCart(product, getUniqueId(product));
               }}
-              className="px-16 py-4 bg-scandiGreen text-white font-raleway font-semibold"
+              disabled={!product.in_stock}
+              data-testid="add-to-cart"
+              className={twMerge(
+                "px-16 py-4 bg-scandiGreen text-white font-raleway font-semibold",
+                !product.in_stock && "bg-gray-300 cursor-not-allowed"
+              )}
             >
               ADD TO CART
             </button>
-            <p>{product?.description}</p>
+            <p data-testid="product-description">
+              {parse(product?.description)}
+            </p>
           </div>
         </div>
       );

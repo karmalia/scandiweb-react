@@ -1,6 +1,6 @@
-import axiosInstance from "../http/http";
+import axiosInstance from "../../http/http";
 import { AxiosResponse } from "axios";
-import { Product } from "../types/index";
+import { Product } from "../../types/index";
 
 interface GetProductsResponse {
   data: {

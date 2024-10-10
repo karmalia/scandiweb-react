@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import Header from "../components/shared/Header";
 import { globalStore } from "../MobX/global-store";
-import healthCheck from "../graphql/health-check";
+import healthCheck from "../graphql/queries/health-check";
 import Icons from "../components/shared/Icons";
 import Spinner from "../components/shared/Spinner";
 import CartContent from "../components/CartContent/CartContent";
@@ -43,14 +43,7 @@ class Layout extends Component<Props, State> {
   }
 
   render() {
-    const {
-      cart,
-      increaseQuantity,
-      decreaseQuantity,
-      toggleCartModal,
-      cartModal,
-    } = globalStore;
-    const { products, totalAmount, currencyId, totalItems } = cart;
+    const { toggleCartModal, cartModal } = globalStore;
     const { status, isLoading } = this.state;
 
     return (
@@ -75,10 +68,12 @@ class Layout extends Component<Props, State> {
               <main className="container mx-auto">{this.props.children}</main>
               {cartModal && (
                 <div
-                  className="w-full h-full min-h-dvh bg-black/20 absolute top-0 left-0 flex justify-end items-start pr-40"
+                  className="w-full h-full min-h-dvh bg-black/20 absolute top-0 left-0 flex justify-end items-start animate-fade animate-once animate-ease-out"
                   onClick={toggleCartModal}
                 >
-                  <CartContent />
+                  <div className=" flex items-end justify-end w-full mx-auto container">
+                    <CartContent />
+                  </div>
                 </div>
               )}
             </div>

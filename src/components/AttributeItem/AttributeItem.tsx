@@ -24,7 +24,7 @@ class AttributeItemText extends Component<AttributeItemProps, State> {
         className={twMerge(
           `${isSelected ? "bg-black text-white" : "bg-white text-black"} ${
             handleAttributeSelection && "cursor-pointer"
-          } border-black border w-[80px] text-center font-roboto`,
+          } border-black border w-[80px] text-center font-roboto grid place-items-center`,
           className && className
         )}
         onClick={() =>

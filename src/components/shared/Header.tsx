@@ -7,7 +7,7 @@ import getFirstPathSegment from "../../utils/get-first-path-segment";
 import Cart from "../Cart";
 import { globalStore } from "../../MobX/global-store";
 import { observer } from "mobx-react";
-import getCategories from "../../graphql/get-categories";
+import getCategories from "../../graphql/queries/get-categories";
 
 type Props = RouteComponentProps<{ category: string }>;
 
@@ -62,18 +62,20 @@ class Header extends Component<Props, State> {
     }
 
     return (
-      <nav className="container mx-auto flex justify-between items-center ">
-        <ul className="flex gap-4 h-20 font-raleway font-semibold flex-1">
-          <Link
-            to={`/`}
-            className={`h-full min-w-16 grid place-content-center uppercase tracking-wider ${
-              category === "/"
-                ? "text-scandiGreen border-b-2 border-scandiGreen"
-                : "text-black"
-            }`}
-          >
-            {"All"}
-          </Link>
+      <nav className="container mx-auto flex justify-between items-center px-4">
+        <ul className="text-xs md:text-lg flex gap-4 h-14 md:h-20 font-raleway font-semibold flex-1">
+          <li>
+            <Link
+              to={`/`}
+              className={`h-full min-w-16 grid place-content-center uppercase tracking-wider ${
+                category === "/"
+                  ? "text-scandiGreen border-b-2 border-scandiGreen"
+                  : "text-black"
+              }`}
+            >
+              {"All"}
+            </Link>
+          </li>
           {categories.map((link: Category) => {
             const isActive = getFirstPathSegment(category) === link.name; // Strict comparison to avoid issues
             return (
@@ -95,8 +97,8 @@ class Header extends Component<Props, State> {
             );
           })}
         </ul>
-        <img src="/shop-logo.svg" alt="Shop Logo" />
-        <div className="flex-1 flex justify-end">
+        <img src="/shop-logo.svg" alt="Shop Logo" className="hidden md:block" />
+        <div className="flex-1 flex justify-end pr-4">
           <Cart />
         </div>
       </nav>

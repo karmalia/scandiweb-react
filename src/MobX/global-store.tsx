@@ -1,24 +1,27 @@
 import { observable, action, makeObservable } from "mobx";
-import { Product, ProductToAdd } from "../types";
-import getProductById from "../graphql/get-product-byid";
+import { I_Order, Product, ProductToAdd } from "../types";
+import getProductById from "../graphql/queries/get-product-byid";
 import { Bounce, toast } from "react-toastify";
 
 import { makePersistable } from "mobx-persist-store";
 import getUniqueId from "../utils/get-unique-id";
-interface BasketProduct extends Product {
-  quantity: number;
-  unique: string;
-  totalPrice: number;
-}
+import getOrders from "../graphql/queries/get-orders";
 
-interface Basket {
+export interface Basket {
   totalAmount: number;
   totalItems: number;
   currencyId: string;
   products: BasketProduct[];
 }
 
+interface BasketProduct extends Product {
+  quantity: number;
+  unique: string;
+  totalPrice: number;
+}
+
 class GlobalStore {
+  orders: I_Order[] = [];
   cartModal: boolean = false;
   error: Error | null = null;
   cart: Basket = {
@@ -31,6 +34,7 @@ class GlobalStore {
   constructor() {
     makeObservable(this, {
       cartModal: observable,
+      orders: observable,
       cart: observable,
       error: observable,
       toggleCartModal: action,
@@ -38,13 +42,20 @@ class GlobalStore {
 
     makePersistable(this, {
       name: "GlobalStore",
-      properties: ["cart", "cartModal"], // List properties to persist
-      storage: window.localStorage, // Choose localStorage as the storage medium
+      properties: ["cart", "cartModal"],
+      storage: window.localStorage,
     });
   }
 
   toggleCartModal = () => {
     this.cartModal = !this.cartModal;
+  };
+
+  fetchOrders = async () => {
+    const response = await getOrders();
+    if (!response) return toast.error("Error fetching orders");
+
+    this.orders = [...response];
   };
 
   // Add to cart in product listing page, uses default attributes
@@ -108,6 +119,12 @@ class GlobalStore {
       });
       this.cart.totalItems += 1;
     }
+    toast.success("Product added to cart", {
+      transition: Bounce,
+      position: "top-center",
+      style: { backgroundColor: "#4CAF50", color: "white" },
+    });
+    this.cart.totalAmount += response.data.productById.prices[0].amount;
   };
 
   addToCart = (productToAdd: Product, selectedAttributes: string) => {
@@ -117,6 +134,7 @@ class GlobalStore {
       (item) => item.id === productToAdd.id
     );
     this.cart.totalItems += 1;
+    this.cart.totalAmount += productToAdd.prices[0].amount;
 
     if (existingProduct) {
       const findSameAttribute = this.cart.products.find(
@@ -153,6 +171,7 @@ class GlobalStore {
       existingProduct.totalPrice += existingProduct.prices[0].amount;
     }
     this.cart.totalItems += 1;
+    this.cart.totalAmount += existingProduct?.prices[0].amount || 0;
   };
 
   decreaseQuantity = (uniqueId: string) => {
@@ -169,6 +188,7 @@ class GlobalStore {
       }
     }
     this.cart.totalItems -= 1;
+    this.cart.totalAmount -= existingProduct?.prices[0].amount || 0;
   };
 
   removeFromCart = (productId: string) => {
@@ -184,6 +204,12 @@ class GlobalStore {
       }
     }
     this.cart.totalItems -= 1;
+  };
+
+  resetCart = () => {
+    this.cart.products = [];
+    this.cart.totalAmount = 0;
+    this.cart.totalItems = 0;
   };
 }
 

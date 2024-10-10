@@ -5,8 +5,9 @@ import Products from "./pages/Products";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./layout/layout";
 import ProductDetails from "./pages/ProductDetails";
-import healthCheck from "./graphql/health-check";
+import healthCheck from "./graphql/queries/health-check";
 import { Bounce, ToastContainer } from "react-toastify";
+import Admin from "./pages/Admin";
 class App extends Component {
   componentDidMount() {
     const link = document.createElement("link");
@@ -22,6 +23,7 @@ class App extends Component {
         <Layout>
           <Switch>
             <Route exact path="/" component={Products} />
+            <Route exact path="/admin" component={Admin} />
 
             <Route exact path={`/:category`} component={Products} />
 

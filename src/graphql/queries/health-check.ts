@@ -1,13 +1,13 @@
-import axiosInstance from "../http/http";
+import axiosInstance from "../../http/http";
 import { AxiosResponse } from "axios";
-import { Category } from "../types/index";
+import { Category } from "../../types/index";
 
 interface GetCategoriesResponse {
   data: {
     categories: Category[];
   };
 }
-async function getCategories(): Promise<Category[] | null> {
+async function healthCheck(): Promise<boolean | null> {
   try {
     const response: AxiosResponse<GetCategoriesResponse> =
       await axiosInstance.post("", {
@@ -21,11 +21,11 @@ async function getCategories(): Promise<Category[] | null> {
         `,
       });
 
-    return response.data.data.categories; // Call the setter function with categories
+    return response ? true : null;
   } catch (error) {
     console.error("Error fetching categories:", error);
     return null;
   }
 }
 
-export default getCategories;
+export default healthCheck;
