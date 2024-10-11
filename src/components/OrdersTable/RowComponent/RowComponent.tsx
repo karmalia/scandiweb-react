@@ -62,7 +62,10 @@ class RowComponent extends Component<Props, State> {
         </div>
         {this.state.isExpanded && (
           <div className="bg-gray-100/30">
-            <OrderDetails orderId={order.orderId.toString()} />
+            <OrderDetails
+              toggleExpand={this.toggleExpand}
+              orderId={order.orderId.toString()}
+            />
           </div>
         )}
       </>

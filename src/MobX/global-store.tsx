@@ -55,7 +55,7 @@ class GlobalStore {
     const response = await getOrders();
     if (!response) return toast.error("Error fetching orders");
 
-    this.orders = [...response];
+    this.orders = response;
   };
 
   // Add to cart in product listing page, uses default attributes

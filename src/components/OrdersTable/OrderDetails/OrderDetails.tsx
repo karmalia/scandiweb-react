@@ -10,6 +10,7 @@ import { twMerge } from "tailwind-merge";
 
 type Props = {
   orderId: string;
+  toggleExpand: () => void;
 };
 
 type OrderDetailsState = {
@@ -44,6 +45,7 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
   };
 
   render() {
+    const { toggleExpand } = this.props;
     const { orderDetails, isLoading } = this.state;
     const { fetchOrders } = globalStore;
     const isConfirmed = orderDetails?.status === "confirmed";
@@ -73,6 +75,7 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
                     try {
                       await confirmOrder(orderDetails.orderId.toString());
                       await fetchOrders();
+                      toggleExpand();
                       toast.success("Order Confirming successfully");
                     } catch (error) {
                       console.log("Error accepting order:", error);
@@ -95,6 +98,7 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
                     try {
                       await rejectOrder(orderDetails.orderId.toString());
                       await fetchOrders();
+                      toggleExpand();
                       toast.success("Order rejected successfully");
                     } catch (error) {
                       toast.error("Error rejecting order");

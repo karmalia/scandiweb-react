@@ -2,7 +2,7 @@
 import axios, { AxiosError } from "axios";
 
 const graphql = axios.create({
-  baseURL: "http://localhost/scandiweb-php/server.php",
+  baseURL: "http://46.31.77.136/scandiweb-php/server.php",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
