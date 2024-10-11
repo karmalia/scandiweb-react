@@ -1,8 +1,13 @@
 // src/axiosConfig.js
 import axios, { AxiosError } from "axios";
 
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "http://46.31.77.136/scandiweb-php/server.php"
+    : "http://localhost/scandiweb-php/server.php";
+
 const graphql = axios.create({
-  baseURL: "http://46.31.77.136/scandiweb-php/server.php",
+  baseURL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
