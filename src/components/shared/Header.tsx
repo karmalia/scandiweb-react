@@ -56,7 +56,7 @@ class Header extends Component<Props, State> {
 
   render() {
     const { category, categories } = this.state;
-
+    console.log("getFirstPathSegment(category)", getFirstPathSegment(category));
     if (categories.length === 0) {
       return <div>No categories found</div>;
     }
@@ -72,6 +72,11 @@ class Header extends Component<Props, State> {
                   ? "text-scandiGreen border-b-2 border-scandiGreen"
                   : "text-black"
               }`}
+              data-testid={
+                getFirstPathSegment(category) === null
+                  ? "active-category-link"
+                  : "category-link"
+              }
             >
               {"All"}
             </Link>
