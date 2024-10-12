@@ -208,7 +208,10 @@ class ProductDetails extends Component<Props, State> {
                   toast.error("Please select all attributes");
                 }
               }}
-              disabled={!product.in_stock}
+              disabled={
+                !product.in_stock ||
+                checkIfAllAttributesSelected(product.attributes)
+              }
               data-testid="add-to-cart"
               className={twMerge(
                 "px-16 py-4 bg-scandiGreen text-white font-raleway font-semibold",
