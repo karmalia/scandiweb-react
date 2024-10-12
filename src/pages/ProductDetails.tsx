@@ -99,7 +99,7 @@ class ProductDetails extends Component<Props, State> {
 
   render() {
     const { product, isLoading } = this.state;
-    const { addToCart } = globalStore;
+    const { addToCart, toggleCartModal } = globalStore;
     if (isLoading) {
       return <Spinner />;
     }
@@ -202,9 +202,7 @@ class ProductDetails extends Component<Props, State> {
               onClick={() => {
                 if (isButtonDisabled) {
                   addToCart(product, getUniqueId(product));
-                  toast.success("Product added to cart", {
-                    position: "top-center",
-                  });
+                  toggleCartModal();
                 } else {
                   toast.error("Please select all attributes");
                 }
