@@ -11,6 +11,7 @@ import getUniqueId from "../utils/get-unique-id";
 import parse from "html-react-parser";
 import { twMerge } from "tailwind-merge";
 import { toast } from "react-toastify";
+import convertToSlug from "../utils/convertToSlug";
 type State = {
   product: Product | null;
   isLoading: boolean;
@@ -162,7 +163,9 @@ class ProductDetails extends Component<Props, State> {
                 <div
                   key={attribute.id}
                   className="space-y-2"
-                  data-testid={`product-attribute-${attribute.name}`}
+                  data-testid={`product-attribute-${convertToSlug(
+                    attribute.name
+                  )}`}
                 >
                   <label className="text-xl font-semibold font-roboto tracking-wide uppercase">
                     {attribute.name}:

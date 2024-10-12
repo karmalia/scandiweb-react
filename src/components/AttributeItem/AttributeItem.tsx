@@ -18,7 +18,7 @@ class AttributeItemText extends Component<AttributeItemProps, State> {
   render() {
     const { item, attributeId, handleAttributeSelection, className } =
       this.props;
-    const { displayValue, id, isSelected } = item;
+    const { displayValue, id, isSelected, value } = item;
     return (
       <div
         className={twMerge(
@@ -30,6 +30,9 @@ class AttributeItemText extends Component<AttributeItemProps, State> {
         onClick={() =>
           handleAttributeSelection && handleAttributeSelection(attributeId, id)
         }
+        data-testid={`product-attribute-${attributeId}-${value}${
+          isSelected ? "-selected" : ""
+        }`}
       >
         {displayValue}
       </div>
@@ -58,7 +61,9 @@ class AttributeItemSwatch extends Component<AttributeItemProps, State> {
         onClick={() =>
           handleAttributeSelection && handleAttributeSelection(attributeId, id)
         }
-        data-testid={`attribute-item-${id}-${isSelected ? "selected" : ""}`}
+        data-testid={`product-attribute-${attributeId}-${value}${
+          isSelected ? "-selected" : ""
+        }`}
       />
     );
   }
