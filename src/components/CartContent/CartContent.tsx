@@ -25,6 +25,7 @@ export default class CartContent extends PureComponent {
           e.stopPropagation();
         }}
         className="bg-white w-[330px] min-w-[300px] z-10  h-auto space-y-8 py-8 px-4"
+        data-testid="cart-overlay"
       >
         <h1 className="font-raleway">
           <span className="font-bold text-2xl">My Bag, </span>
@@ -109,7 +110,7 @@ export default class CartContent extends PureComponent {
             })}
         </div>
         <p className="font-raleway text-xl">
-          {currencyId}
+          {"$"}
           {totalAmount.toFixed(2)}
         </p>
         <button

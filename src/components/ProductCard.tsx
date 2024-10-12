@@ -6,6 +6,7 @@ import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
+import convertToSlug from "../utils/convertToSlug";
 type Props = {
   product: Product;
 };
@@ -23,7 +24,7 @@ export default class ProductCard extends Component<Props, State> {
       <Link
         to={`/${product.category}/${product.id}`}
         className="group p-4 hover:shadow-even duration-300 hover:scale-105"
-        data-testid={`product-${product.name}`}
+        data-testid={`product-${convertToSlug(product.name)}`}
       >
         <div className="relative w-full h-[440px]">
           <img
