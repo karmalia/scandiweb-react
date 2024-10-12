@@ -12,6 +12,7 @@ import parse from "html-react-parser";
 import { twMerge } from "tailwind-merge";
 import { toast } from "react-toastify";
 import convertToSlug from "../utils/convertToSlug";
+import checkIfAllAttributesSelected from "../utils/checkIfAllAttributesSelected";
 type State = {
   product: Product | null;
   isLoading: boolean;
@@ -31,6 +32,7 @@ class ProductDetails extends Component<Props, State> {
 
   componentDidMount(): void {
     const { productId } = this.props.match.params;
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     getProductById(productId)
       .then((response) => {
@@ -45,7 +47,7 @@ class ProductDetails extends Component<Props, State> {
                 ...attribute,
                 items: attribute.items.map((item, index) => ({
                   ...item,
-                  isSelected: index === 0,
+                  isSelected: false,
                 })),
               })),
             },
@@ -197,8 +199,14 @@ class ProductDetails extends Component<Props, State> {
             </div>
             <button
               onClick={() => {
-                addToCart(product, getUniqueId(product));
-                toast.success("Product added to cart");
+                if (checkIfAllAttributesSelected(product.attributes)) {
+                  addToCart(product, getUniqueId(product));
+                  toast.success("Product added to cart", {
+                    position: "top-center",
+                  });
+                } else {
+                  toast.error("Please select all attributes");
+                }
               }}
               disabled={!product.in_stock}
               data-testid="add-to-cart"

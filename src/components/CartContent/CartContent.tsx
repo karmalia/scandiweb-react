@@ -111,7 +111,7 @@ export default class CartContent extends PureComponent {
         </div>
         <p className="font-raleway text-xl">
           {"$"}
-          {totalAmount.toFixed(2)}
+          {totalAmount > 0 ? totalAmount.toFixed(2) : "0.00"}
         </p>
         <button
           className="bg-scandiGreen text-white font-raleway text-lg py-2 px-4 w-full tracking-wide hover:bg-scandiGreen/80"
