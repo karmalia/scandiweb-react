@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 import Products from "./pages/Products";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,6 +28,9 @@ class App extends Component {
       <Router>
         <Layout>
           <Switch>
+            <Route exact path="/">
+              <Redirect to="/all" />
+            </Route>
             <Route exact path="/" component={Products} />
             <Route exact path="/admin" component={Admin} />
 

@@ -56,7 +56,11 @@ class Header extends Component<Props, State> {
 
   render() {
     const { category, categories } = this.state;
-    console.log("getFirstPathSegment(category)", getFirstPathSegment(category));
+    console.log("category", category);
+    console.log(
+      "getFirstPathSegment(category|| '/all')",
+      getFirstPathSegment(category || "/all")
+    );
     if (categories.length === 0) {
       return <div>No categories found</div>;
     }
@@ -64,24 +68,7 @@ class Header extends Component<Props, State> {
     return (
       <nav className="container mx-auto flex justify-between items-center px-4">
         <ul className="text-xs md:text-lg flex gap-4 h-14 md:h-20 font-raleway font-semibold flex-1">
-          <li>
-            <Link
-              to={`/`}
-              className={`h-full min-w-16 grid place-content-center uppercase tracking-wider ${
-                category === "/"
-                  ? "text-scandiGreen border-b-2 border-scandiGreen"
-                  : "text-black"
-              }`}
-              data-testid={
-                getFirstPathSegment(category) === null
-                  ? "active-category-link"
-                  : "category-link"
-              }
-            >
-              {"All"}
-            </Link>
-          </li>
-          {categories.map((link: Category) => {
+          {categories.reverse().map((link: Category) => {
             const isActive = getFirstPathSegment(category) === link.name; // Strict comparison to avoid issues
             return (
               <li key={link.id}>

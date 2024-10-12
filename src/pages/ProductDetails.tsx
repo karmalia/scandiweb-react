@@ -5,12 +5,12 @@ import getProductById from "../graphql/queries/get-product-byid";
 import Spinner from "../components/shared/Spinner";
 import Icons from "../components/shared/Icons";
 import AttributeItem from "../components/AttributeItem/AttributeItem";
-import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import getUniqueId from "../utils/get-unique-id";
 import parse from "html-react-parser";
 import { twMerge } from "tailwind-merge";
+import { toast } from "react-toastify";
 type State = {
   product: Product | null;
   isLoading: boolean;
@@ -195,6 +195,7 @@ class ProductDetails extends Component<Props, State> {
             <button
               onClick={() => {
                 addToCart(product, getUniqueId(product));
+                toast.success("Product added to cart");
               }}
               disabled={!product.in_stock}
               data-testid="add-to-cart"

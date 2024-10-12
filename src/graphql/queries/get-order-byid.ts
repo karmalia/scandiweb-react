@@ -20,11 +20,13 @@ async function getOrderById(id: string): Promise<I_OrderDetails | null> {
                 status
                 createdAt
                 updatedAt
+                __typename
                 products {
                     productId
                     productName
                     quantity
                     price
+                    __typename
                     attributes {
                         attributeId
                         attributeName
