@@ -105,6 +105,7 @@ class ProductDetails extends Component<Props, State> {
     }
 
     if (product) {
+      const isButtonDisabled = checkIfAllAttributesSelected(product.attributes);
       return (
         <div className="mt-12 px-4 flex lg:flex-row flex-col lg:flex-nowrap flex-wrapjustify-between gap-12">
           <div className="flex h-auto lg:h-[calc(6rem_*_5)] w-full lg:flex-1 gap-4 lg:flex-row flex-col-reverse">
@@ -199,7 +200,7 @@ class ProductDetails extends Component<Props, State> {
             </div>
             <button
               onClick={() => {
-                if (checkIfAllAttributesSelected(product.attributes)) {
+                if (isButtonDisabled) {
                   addToCart(product, getUniqueId(product));
                   toast.success("Product added to cart", {
                     position: "top-center",
@@ -208,14 +209,12 @@ class ProductDetails extends Component<Props, State> {
                   toast.error("Please select all attributes");
                 }
               }}
-              disabled={
-                !product.in_stock ||
-                checkIfAllAttributesSelected(product.attributes)
-              }
+              disabled={!product.in_stock || !isButtonDisabled}
               data-testid="add-to-cart"
               className={twMerge(
                 "px-16 py-4 bg-scandiGreen text-white font-raleway font-semibold",
-                !product.in_stock && "bg-gray-300 cursor-not-allowed"
+                (!product.in_stock || !isButtonDisabled) &&
+                  "bg-gray-300 cursor-not-allowed"
               )}
             >
               ADD TO CART
