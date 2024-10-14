@@ -37,6 +37,7 @@ class RowComponent extends Component<Props, State> {
 
   render() {
     const { order } = this.props;
+    console.log("Order", order);
     return (
       <>
         <div

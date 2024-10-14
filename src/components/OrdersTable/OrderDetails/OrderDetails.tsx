@@ -58,6 +58,8 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
     if (!orderDetails && !isLoading)
       return <div className="p-4">No order details found</div>;
 
+    console.log("OrderDetails", orderDetails);
+
     if (orderDetails) {
       return (
         <div className="p-4">
@@ -124,7 +126,7 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
           </div>
           <div className="ml-4">
             <h3 className="font-semibold">Products:</h3>
-            {orderDetails.products.map((product) => (
+            {orderDetails.items.map((product) => (
               <div key={product.productId} className="border p-2 mt-2">
                 <p>
                   <span className="font-bold">Product Name:</span>{" "}
@@ -142,7 +144,7 @@ class OrderDetails extends Component<Props, OrderDetailsState> {
                   <div>
                     <h4 className="font-semibold">Attributes:</h4>
                     <ul className="ml-4 list-disc">
-                      {product.attributes.map((attr) => (
+                      {product.attributes?.map((attr) => (
                         <li key={attr.attributeId}>
                           {attr.attributeName}: {attr.attributeValue}
                         </li>

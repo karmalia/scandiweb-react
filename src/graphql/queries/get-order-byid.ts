@@ -16,12 +16,12 @@ async function getOrderById(id: string): Promise<I_OrderDetails | null> {
             getOrderById(id: ${id}) {
                 orderId
                 totalAmount
-                currencySymbol
+                currencyId
                 status
                 createdAt
                 updatedAt
                 __typename
-                products {
+                items {
                     productId
                     productName
                     quantity

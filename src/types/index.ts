@@ -21,7 +21,7 @@ export interface I_OrderDetails {
   status: string;
   createdAt: string;
   updatedAt: string;
-  products: {
+  items: {
     productId: string;
     productName: string;
     quantity: number;
