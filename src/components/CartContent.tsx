@@ -1,12 +1,12 @@
 import { Component, PureComponent } from "react";
-import { globalStore } from "../../MobX/global-store";
+import { globalStore } from "../MobX/global-store";
 import { observer } from "mobx-react";
-import Icons from "../shared/Icons";
-import AttributeItem from "../AttributeItem/AttributeItem";
+import Icons from "./shared/Icons";
 
-import getAttributeItemTypeClassName from "../../utils/get-attribute-item-type-classname";
-import getUniqueId from "../../utils/get-unique-id";
-import insertOrder from "../../graphql/mutations/insert-order";
+import getAttributeItemTypeClassName from "../utils/get-attribute-item-type-classname";
+import getUniqueId from "../utils/get-unique-id";
+import insertOrder from "../graphql/mutations/insert-order";
+import AttributeItem from "./AttributeItem/AttributeItem";
 
 @observer
 export default class CartContent extends PureComponent {
@@ -47,9 +47,9 @@ export default class CartContent extends PureComponent {
                       {product.totalPrice.toFixed(2)}
                     </p>
                     <div className="space-y-2">
-                      {product.attributes.map((attribute) => (
+                      {product.attributes.map((attribute, index) => (
                         <div
-                          key={attribute.name}
+                          key={attribute.name + index}
                           className="flex flex-col gap-1"
                           data-testid={`cart-item-attribute-${attribute.name}`}
                         >
@@ -57,9 +57,10 @@ export default class CartContent extends PureComponent {
                             {attribute.name}:
                           </p>
                           <div className="flex font-raleway  flex-wrap font-[300] gap-1">
-                            {attribute.items.map((item) => {
+                            {attribute.items.map((item, index) => {
                               return (
                                 <AttributeItem
+                                  key={item.id + index}
                                   item={item}
                                   attributeType={attribute.type}
                                   isSelected={item.isSelected!}

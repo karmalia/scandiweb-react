@@ -47,7 +47,6 @@ function createInsertOrder(basket: Basket): string {
 async function insertOrder(basket: Basket): Promise<boolean> {
   try {
     const createdOrder = createInsertOrder(basket);
-    console.log("createdOrder", createdOrder);
 
     await axiosInstance.post("", {
       query: createdOrder,

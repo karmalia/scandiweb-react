@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 const baseURL =
   process.env.NODE_ENV === "production"
     ? "https://2cf3-46-31-77-136.ngrok-free.app/scandiweb-php/server.php"
-    : "http://localhost/scandiweb-php/server.php";
+    : "http://localhost/scandiweb-php/index.php";
 
 const graphql = axios.create({
   baseURL,

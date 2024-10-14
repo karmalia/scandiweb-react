@@ -12,7 +12,6 @@ async function getProducts(
   category: string
 ): Promise<void> {
   try {
-    console.log("Fetching products for category:", category);
     const response: AxiosResponse<GetProductsResponse> =
       await axiosInstance.post("", {
         query: `

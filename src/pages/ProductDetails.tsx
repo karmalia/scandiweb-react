@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Product, ProductToAdd } from "../types";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import getProductById from "../graphql/queries/get-product-byid";

@@ -56,11 +56,6 @@ class Header extends Component<Props, State> {
 
   render() {
     const { category, categories } = this.state;
-    console.log("category", category);
-    console.log(
-      "getFirstPathSegment(category|| '/all')",
-      getFirstPathSegment(category || "/all")
-    );
     if (categories.length === 0) {
       return <div>No categories found</div>;
     }

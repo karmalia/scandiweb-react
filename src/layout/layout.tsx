@@ -7,7 +7,7 @@ import { globalStore } from "../MobX/global-store";
 import healthCheck from "../graphql/queries/health-check";
 import Icons from "../components/shared/Icons";
 import Spinner from "../components/shared/Spinner";
-import CartContent from "../components/CartContent/CartContent";
+import CartContent from "../components/CartContent";
 
 type Props = RouteComponentProps & {
   children: React.ReactNode;
@@ -32,7 +32,6 @@ class Layout extends Component<Props, State> {
   async performHealthCheck() {
     try {
       const response = await healthCheck();
-      console.log("response", response);
       this.setState({ status: response ? "OK" : null });
     } catch (error) {
       console.error("Error fetching categories:", error);

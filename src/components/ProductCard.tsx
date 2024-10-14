@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Product } from "../types";
 import Icons from "./shared/Icons";
 import { observer } from "mobx-react";
 import { globalStore } from "../MobX/global-store";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import convertToSlug from "../utils/convertToSlug";
 type Props = {
