@@ -25,9 +25,10 @@ class OrderTable extends Component {
           <div className="w-1/4 text-center">Updated At</div>
         </div>
         {orders &&
-          orders.map((order) => (
-            <RowComponent key={order.orderId} order={order} />
-          ))}
+          orders
+            .slice()
+            .reverse()
+            .map((order) => <RowComponent key={order.orderId} order={order} />)}
         {!orders && <div className="p-4">No orders found</div>}
       </div>
     );
