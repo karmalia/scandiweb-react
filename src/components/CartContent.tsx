@@ -7,6 +7,7 @@ import getAttributeItemTypeClassName from "../utils/get-attribute-item-type-clas
 import getUniqueId from "../utils/get-unique-id";
 import insertOrder from "../graphql/mutations/insert-order";
 import AttributeItem from "./AttributeItem/AttributeItem";
+import { twMerge } from "tailwind-merge";
 
 @observer
 export default class CartContent extends PureComponent {
@@ -115,7 +116,11 @@ export default class CartContent extends PureComponent {
           {totalAmount > 0 ? totalAmount.toFixed(2) : "0.00"}
         </p>
         <button
-          className="bg-scandiGreen text-white font-raleway text-lg py-2 px-4 w-full tracking-wide hover:bg-scandiGreen/80"
+          className={twMerge(
+            "bg-scandiGreen text-white font-raleway text-lg py-2 px-4 w-full tracking-wide hover:bg-scandiGreen/80",
+            totalItems == 0 &&
+              "cursor-not-allowed bg-gray-400 hover:bg-gray-400/80"
+          )}
           onClick={async () => {
             const response = await insertOrder(cart);
             if (response) {
@@ -123,6 +128,7 @@ export default class CartContent extends PureComponent {
               toggleCartModal();
             }
           }}
+          disabled={totalItems == 0}
         >
           PLACE ORDER
         </button>
