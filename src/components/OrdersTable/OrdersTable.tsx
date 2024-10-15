@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import RowComponent from "./RowComponent/RowComponent";
-import getOrders from "../../graphql/queries/get-orders";
-import { I_Order } from "../../types";
 import { observer } from "mobx-react";
 import { globalStore } from "../../MobX/global-store";
 

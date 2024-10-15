@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import { observer } from "mobx-react";
 
 import Header from "../components/shared/Header";
@@ -65,6 +65,11 @@ class Layout extends Component<Props, State> {
             <Header {...this.props} />
             <div className="relative mx-auto antialiased min-h-dvh h-auto border border-transparent">
               <main className="container mx-auto">{this.props.children}</main>
+              <Link to="/admin">
+                <button className="fixed bottom-4 right-4 bg-scandiGreen text-white font-semibold px-4 py-2 rounded-lg">
+                  DASHBOARD
+                </button>
+              </Link>
               {cartModal && (
                 <div
                   className="w-full h-full min-h-dvh bg-black/20 absolute top-0 left-0 flex justify-end items-start animate-fade animate-once animate-ease-out"
